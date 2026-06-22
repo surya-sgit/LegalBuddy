@@ -19,7 +19,7 @@ from langchain_tavily import TavilySearch
 from langgraph.graph import END, StateGraph
 
 # --- Local Imports ---
-from src.llm import llm 
+from src.llm import llm, extract_usage_metrics
 from src.chat_history import get_user_chat_history 
 
 from dotenv import load_dotenv
@@ -407,3 +407,10 @@ def get_rag_response(query: str, user_id: str, session_id: str):
         "cache_hit": final_execution_state.get("cache_hit", False),
         "intent": final_execution_state.get("intent")
     }
+
+def get_pipeline_metrics(raw_responses: list) -> float:
+    """
+    Calculates average tokens used across multiple responses.
+    """
+    total = sum(extract_usage_metrics(r) for r in raw_responses)
+    return total / len(raw_responses)

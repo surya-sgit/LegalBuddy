@@ -20,7 +20,7 @@ from src.chat_history import (
     save_chat_message,
 )
 from src.rag_pipeline import app as graph_engine
-from src.rag_pipeline import lc_embedder
+from src.rag_pipeline import lc_embedder, get_pipeline_metrics
 
 app = FastAPI(
     title="LegalBuddy API",
@@ -159,6 +159,12 @@ async def chat_endpoint(request: ChatQuery):
                 )
 
     return StreamingResponse(response_generator(), media_type="text/plain")
+
+# Add this new endpoint
+@app.post("/api/metrics")
+def calculate_metrics(responses: list):
+    avg_tokens = get_pipeline_metrics(responses)
+    return {"average_tokens": avg_tokens}
 
 @app.get("/")
 def root():

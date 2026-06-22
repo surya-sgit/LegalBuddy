@@ -22,7 +22,11 @@ def get_llm():
         print(f"Error loading Groq LLM: {e}")
         print("Please ensure your GROQ_API_KEY is set correctly in your .env file.")
         return None
-
+def extract_usage_metrics(api_response: dict) -> int:
+    """
+    Extracts total tokens from a raw LLM API response.
+    """
+    return api_response["usage"]["total_tokens"]
 # Create a single, pre-loaded instance
 llm = get_llm()
 
